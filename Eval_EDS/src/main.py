@@ -61,7 +61,7 @@ class EvalEDSApp(App):
 
         # Load and validate configuration
         try:
-            self.app_config = load_config() 
+            self.app_config = load_config(CONFIG_FILE_NAME,CONFIG_FILE_PATH) 
         except ConfigError as e:
             logger.error("Configuration error: %s", e)
             # do something here
