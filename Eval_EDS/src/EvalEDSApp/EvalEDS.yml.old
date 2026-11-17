@@ -1,3 +1,0 @@
-CHROMA_DB: MyHealth
-CHROMA_DB_PATH: C:\Users\keith.chambers\git\repository\AskMe\AskMe\src\context
-DEFAULT_LLM: gemini-3.5-flash-lite
