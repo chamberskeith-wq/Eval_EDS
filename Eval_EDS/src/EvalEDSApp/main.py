@@ -8,15 +8,13 @@ Created on Aug 25, 2025
 # imports
 # -----------------------------
 # Common services
-from common.configuration.manager import ConfigManager
-from common.configuration.secrets import SecretManager
-from common.configuration.exceptions import ConfigError, ConfigSecretError
+from common.configuration import ConfigManager, SecretManager, ConfigError, ConfigSecretError
 from datetime import datetime
 
 #application configuration
-from EvalEDSApp.config.app_config import EvalEDSConfig
+from EvalEDSApp.config import EvalEDSConfig
 
-from EvalEDSApp.config.app_constants import (
+from EvalEDSApp.config import (
     APP_NAME,
     APP_NAMESPACE,
     CONFIG_FILE_NAME,
@@ -31,7 +29,8 @@ from pathlib import Path
 # -----------------------------
 # Configure logging
 # -----------------------------
-from common.logging.my_logging import configure_base_logging, enforce_library_levels
+from common.logging import configure_base_logging, enforce_library_levels
+from flatbuffers.builder import Builder
 configure_base_logging()
 
 import logging
@@ -42,53 +41,28 @@ logger = logging.getLogger(APP_NAMESPACE)
 from kivy.app import App
 from kivy.utils import colormap 
 from kivy.uix.screenmanager import Screen
+from kivy.uix.boxlayout import BoxLayout
+from kivy.lang import Builder
 
 # the screen procedures need to be imported even though they are not directly referenced 
-# from AskMeApp.ui.query_screen import QueryScreen
+from ui import StatusScreen
+
 # from AskMeApp.ui.settings_screen import SettingsScreen
 # from AskMeApp.ui.context_screen import ContextScreen
 # ============================================================
 # EvalEDS - Main Screen
 # ============================================================
 
-class EvalEDSScreen(Screen):
+class EvalEDSScreen(BoxLayout):
     """
-    Main three-panel workspace controller.
-
-    Inspector
-    Status
-    Configuration
+    Main application layout.
     """
 
-    # --------------------------------------------------------
-    # Status panel
-    # --------------------------------------------------------
-
-    def set_status(self, message: str, level: str = "INFO"):
-        """Append a message to the Status panel and application log."""
-
-        timestamp = datetime.now().strftime("%H:%M:%S")
-
-        status_output = self.ids.get("status_output")
-
-        if status_output is not None:
-            existing = status_output.text.rstrip()
-
-            entry = f"[{timestamp}] {level}: {message}"
-
-            status_output.text = (
-                f"{existing}\n{entry}" if existing else entry
-            )
-
-        app_logger = logging.getLogger(APP_NAMESPACE)
-
-        log_method = getattr(
-            app_logger,
-            level.lower(),
-            app_logger.info
-        )
-
-        log_method(message)
+    def set_status(self, message, level="INFO"):
+        """Append a message to the Status screen."""
+    
+        status_screen = self.ids.screen_manager.get_screen("status")
+        status_screen.add_message(message, level)
 
     # --------------------------------------------------------
     # Application status
@@ -112,7 +86,8 @@ class EvalEDSScreen(Screen):
         from kivy.metrics import dp
         from kivy.uix.label import Label
 
-        content = self.ids.get("inspector_content")
+        inspector_screen = self.ids.screen_manager.get_screen("inspector")
+        content = inspector_screen.ids.get("inspector_content")
 
         if content is None:
             return
@@ -202,7 +177,7 @@ class EvalEDSApp(App):
         Build the application UI.
         """
         
-        self.main_screen = EvalEDSScreen(name="main")
+        self.main_screen = EvalEDSScreen()
 
         return self.main_screen
     

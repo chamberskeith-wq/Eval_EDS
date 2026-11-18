@@ -6,11 +6,16 @@
 # EvalEDS - Main UI
 # ============================================================
 
+
+# ============================================================
+# Reusable panel header
+# ============================================================
+
 <PanelHeader@BoxLayout>:
     title: ""
     size_hint_y: None
-    height: "42dp"
-    padding: "10dp", 0
+    height: dp(42)
+    padding: dp(10), 0
 
     canvas.before:
         Color:
@@ -28,282 +33,270 @@
         color: 1, 1, 1, 1
 
 
-<EvalEDSScreen>:
+# ============================================================
+# INSPECTOR SCREEN
+# ============================================================
+
+<InspectorScreen@Screen>:
 
     BoxLayout:
         orientation: "vertical"
-        padding: "8dp"
-        spacing: "8dp"
+        padding: dp(8)
+        spacing: dp(5)
 
-        # ====================================================
-        # Main three-panel workspace
-        # ====================================================
+        canvas.before:
+            Color:
+                rgba: 0.94, 0.95, 0.97, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
 
-        BoxLayout:
-            orientation: "horizontal"
-            spacing: "8dp"
+        PanelHeader:
+            title: "Inspector"
 
-            # =================================================
-            # INSPECTOR PANEL
-            # =================================================
+        Label:
+            text: "Browse and select an item to inspect"
+            size_hint_y: None
+            height: dp(34)
+            color: 0.25, 0.28, 0.32, 1
+            halign: "left"
+            valign: "middle"
+            text_size: self.size
+            padding: dp(8), 0
 
-            BoxLayout:
-                id: inspector_panel
-                orientation: "vertical"
-                size_hint_x: 0.30
-                spacing: "5dp"
+        ScrollView:
+            id: inspector_scroll
+            do_scroll_x: False
+            bar_width: dp(8)
 
-                canvas.before:
-                    Color:
-                        rgba: 0.94, 0.95, 0.97, 1
-                    Rectangle:
-                        pos: self.pos
-                        size: self.size
-
-                PanelHeader:
-                    title: "Inspector"
+            GridLayout:
+                id: inspector_content
+                cols: 1
+                size_hint_y: None
+                height: self.minimum_height
+                spacing: dp(4)
+                padding: dp(8)
 
                 Label:
-                    text: "Browse and select an item to inspect"
+                    text: "Inspector content will be populated by the application."
                     size_hint_y: None
-                    height: "34dp"
-                    color: 0.25, 0.28, 0.32, 1
+                    height: self.texture_size[1] + dp(16)
+                    text_size: self.width, None
                     halign: "left"
-                    valign: "middle"
-                    text_size: self.size
-                    padding: "8dp", 0
-
-                ScrollView:
-                    id: inspector_scroll
-                    do_scroll_x: False
-                    bar_width: "8dp"
-
-                    GridLayout:
-                        id: inspector_content
-                        cols: 1
-                        size_hint_y: None
-                        height: self.minimum_height
-                        spacing: "4dp"
-                        padding: "8dp"
-
-                        Label:
-                            text: "Inspector content will be populated by the application."
-                            size_hint_y: None
-                            height: self.texture_size[1] + dp(16)
-                            text_size: self.width, None
-                            halign: "left"
-                            valign: "top"
-                            color: 0.25, 0.28, 0.32, 1
+                    valign: "top"
+                    color: 0.25, 0.28, 0.32, 1
 
 
-            # =================================================
-            # STATUS PANEL
-            # =================================================
+
+# ============================================================
+# CONFIGURATION SCREEN
+# ============================================================
+
+<ConfigurationScreen@Screen>:
+
+    BoxLayout:
+        orientation: "vertical"
+        padding: dp(8)
+        spacing: dp(5)
+
+        canvas.before:
+            Color:
+                rgba: 0.94, 0.95, 0.97, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        PanelHeader:
+            title: "Configuration"
+
+        Label:
+            text: "Application configuration"
+            size_hint_y: None
+            height: dp(34)
+            color: 0.25, 0.28, 0.32, 1
+            halign: "left"
+            valign: "middle"
+            text_size: self.size
+            padding: dp(8), 0
+
+        ScrollView:
+            id: configuration_scroll
+            do_scroll_x: False
+            bar_width: dp(8)
 
             BoxLayout:
-                id: status_panel
+                id: configuration_content
                 orientation: "vertical"
-                size_hint_x: 0.30
-                spacing: "5dp"
+                size_hint_y: None
+                height: self.minimum_height
+                spacing: dp(10)
+                padding: dp(8)
 
-                canvas.before:
-                    Color:
-                        rgba: 0.97, 0.97, 0.97, 1
-                    Rectangle:
-                        pos: self.pos
-                        size: self.size
+                # -------------------------------------
+                # Configuration file and profile
+                # -------------------------------------
 
-                PanelHeader:
-                    title: "Status"
-
-                BoxLayout:
+                GridLayout:
+                    id: configuration_fields
+                    cols: 2
                     size_hint_y: None
-                    height: "34dp"
-                    padding: "8dp", 0
+                    height: self.minimum_height
+                    row_default_height: dp(42)
+                    row_force_default: True
+                    spacing: dp(6)
 
                     Label:
-                        text: "Application activity and messages"
-                        color: 0.25, 0.28, 0.32, 1
-                        halign: "left"
+                        text: "Configuration file"
+                        halign: "right"
                         valign: "middle"
                         text_size: self.size
-
-                ScrollView:
-                    id: status_scroll
-                    do_scroll_x: False
-                    bar_width: "8dp"
-
-                    TextInput:
-                        id: status_output
-                        text: "Ready. Status messages will appear here."
-                        readonly: True
-                        multiline: True
-                        size_hint_y: None
-                        height: max(self.minimum_height, status_scroll.height)
-                        padding: "8dp"
-                        background_color: 0.99, 0.99, 0.99, 1
-                        foreground_color: 0.18, 0.20, 0.23, 1
-                        cursor_blink: False
-
-
-            # =================================================
-            # CONFIGURATION PANEL
-            # =================================================
-
-            BoxLayout:
-                id: configuration_panel
-                orientation: "vertical"
-                size_hint_x: 0.40
-                spacing: "5dp"
-
-                canvas.before:
-                    Color:
-                        rgba: 0.94, 0.95, 0.97, 1
-                    Rectangle:
-                        pos: self.pos
-                        size: self.size
-
-                PanelHeader:
-                    title: "Configuration"
-
-                Label:
-                    text: "Application configuration"
-                    size_hint_y: None
-                    height: "34dp"
-                    color: 0.25, 0.28, 0.32, 1
-                    halign: "left"
-                    valign: "middle"
-                    text_size: self.size
-                    padding: "8dp", 0
-
-                ScrollView:
-                    id: configuration_scroll
-                    do_scroll_x: False
-                    bar_width: "8dp"
+                        color: 0.20, 0.22, 0.25, 1
 
                     BoxLayout:
-                        id: configuration_content
-                        orientation: "vertical"
-                        size_hint_y: None
-                        height: self.minimum_height
-                        spacing: "10dp"
-                        padding: "8dp"
+                        spacing: dp(4)
 
-                        # -------------------------------------
-                        # Configuration file and profile
-                        # -------------------------------------
+                        TextInput:
+                            id: configuration_file
+                            hint_text: "Select or enter a file path"
+                            multiline: False
 
-                        GridLayout:
-                            id: configuration_fields
-                            cols: 2
-                            size_hint_y: None
-                            height: self.minimum_height
-                            row_default_height: "42dp"
-                            row_force_default: True
-                            spacing: "6dp"
+                        Button:
+                            id: browse_configuration
+                            text: "Browse"
+                            size_hint_x: None
+                            width: dp(82)
+                            on_release: app.root.set_status("File browsing will be added with configuration editing.")
 
-                            Label:
-                                text: "Configuration file"
-                                halign: "right"
-                                valign: "middle"
-                                text_size: self.size
-                                color: 0.20, 0.22, 0.25, 1
+                    Label:
+                        text: "Configuration profile"
+                        halign: "right"
+                        valign: "middle"
+                        text_size: self.size
+                        color: 0.20, 0.22, 0.25, 1
 
-                            BoxLayout:
-                                spacing: "4dp"
+                    Spinner:
+                        id: configuration_profile
+                        text: "Default"
+                        values: ["Default"]
 
-                                TextInput:
-                                    id: configuration_file
-                                    hint_text: "Select or enter a file path"
-                                    multiline: False
+                # -------------------------------------
+                # Configuration properties
+                # -------------------------------------
 
-                                Button:
-                                    id: browse_configuration
-                                    text: "Browse"
-                                    size_hint_x: None
-                                    width: "82dp"
-                                    on_release: root.set_status("File browsing will be added with configuration editing.")
-
-                            Label:
-                                text: "Configuration profile"
-                                halign: "right"
-                                valign: "middle"
-                                text_size: self.size
-                                color: 0.20, 0.22, 0.25, 1
-
-                            Spinner:
-                                id: configuration_profile
-                                text: "Default"
-                                values: ["Default"]
-
-                        # -------------------------------------
-                        # Configuration properties
-                        # -------------------------------------
-
-                        Label:
-                            text: "Configuration properties will be generated from the application's configuration schema."
-                            size_hint_y: None
-                            height: self.texture_size[1] + dp(12)
-                            text_size: self.width, None
-                            halign: "left"
-                            valign: "top"
-                            color: 0.35, 0.37, 0.40, 1
-
-                        GridLayout:
-                            id: configuration_property_fields
-                            cols: 2
-                            size_hint_y: None
-                            height: self.minimum_height
-                            row_default_height: "42dp"
-                            row_force_default: True
-                            spacing: "6dp"
-
-                # ---------------------------------------------
-                # Configuration actions
-                # ---------------------------------------------
-
-                BoxLayout:
+                Label:
+                    text: "Configuration properties will be generated from the application's configuration schema."
                     size_hint_y: None
-                    height: "46dp"
-                    spacing: "6dp"
-                    padding: "6dp"
+                    height: self.texture_size[1] + dp(12)
+                    text_size: self.width, None
+                    halign: "left"
+                    valign: "top"
+                    color: 0.35, 0.37, 0.40, 1
 
-                    Button:
-                        id: load_configuration
-                        text: "Load"
-                        on_release: root.on_load_configuration()
+                GridLayout:
+                    id: configuration_property_fields
+                    cols: 2
+                    size_hint_y: None
+                    height: self.minimum_height
+                    row_default_height: dp(42)
+                    row_force_default: True
+                    spacing: dp(6)
 
-                    Button:
-                        id: validate_configuration
-                        text: "Verify"
-                        on_release: root.on_verify_configuration()
-
-                    Button:
-                        id: save_configuration
-                        text: "Save"
-                        on_release: root.on_save_configuration()
-
-
-        # ====================================================
-        # APPLICATION STATUS STRIP
-        # ====================================================
+        # -----------------------------------------
+        # Configuration actions
+        # -----------------------------------------
 
         BoxLayout:
             size_hint_y: None
-            height: "30dp"
-            padding: "8dp", 0
+            height: dp(46)
+            spacing: dp(6)
+            padding: dp(6)
 
-            canvas.before:
-                Color:
-                    rgba: 0.18, 0.22, 0.28, 1
-                Rectangle:
-                    pos: self.pos
-                    size: self.size
+            Button:
+                id: load_configuration
+                text: "Load"
+                on_release: app.root.on_load_configuration()
 
-            Label:
-                id: application_status
-                text: "Eval_EDS"
-                color: 1, 1, 1, 1
-                halign: "left"
-                valign: "middle"
-                text_size: self.size
+            Button:
+                id: validate_configuration
+                text: "Verify"
+                on_release: app.root.on_verify_configuration()
+
+            Button:
+                id: save_configuration
+                text: "Save"
+                on_release: app.root.on_save_configuration()
+
+
+# ============================================================
+# APPLICATION ROOT
+# ============================================================
+
+<EvalEDSScreen>:
+
+    orientation: "vertical"
+    spacing: dp(3)
+    padding: dp(8)
+
+    # ========================================================
+    # MAIN SCREEN AREA
+    # ========================================================
+
+    ScreenManager:
+        id: screen_manager
+        size_hint_y: 1
+
+        InspectorScreen:
+            name: "inspector"
+
+        StatusScreen:
+            name: "status"
+
+        ConfigurationScreen:
+            name: "configuration"
+
+    # ========================================================
+    # NAVIGATION BUTTON BAR
+    # ========================================================
+
+    BoxLayout:
+        id: navigation_bar
+        orientation: "horizontal"
+        size_hint_y: None
+        height: dp(48)
+        spacing: dp(5)
+
+        Button:
+            text: "Inspector"
+            on_release: screen_manager.current = "inspector"
+
+        Button:
+            text: "Status"
+            on_release: screen_manager.current = "status"
+
+        Button:
+            text: "Configuration"
+            on_release: screen_manager.current = "configuration"
+
+    # ========================================================
+    # APPLICATION STATUS STRIP
+    # ========================================================
+
+    BoxLayout:
+        size_hint_y: None
+        height: dp(30)
+        padding: dp(8), 0
+
+        canvas.before:
+            Color:
+                rgba: 0.18, 0.22, 0.28, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        Label:
+            id: application_status
+            text: "Eval_EDS"
+            color: 1, 1, 1, 1
+            halign: "left"
+            valign: "middle"
+            text_size: self.size

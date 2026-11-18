@@ -13,11 +13,13 @@ default values and validation rules.
 from dataclasses import dataclass
 from pathlib import Path
 
-from common.configuration.exceptions import ConfigValidationError
+from common.configuration import ConfigValidationError
 
 from .app_constants import (
     DEFAULT_PORT,
-    DEFAULT_URL
+    DEFAULT_URL,
+    DEFAULT_TIMEOUT,
+    DEFAULT_RETRY_INTERVAL
 )
 
 
@@ -34,15 +36,15 @@ class EvalEDSConfig:
     # AVEVA Edge Data Store connection
     # --------------------------------------------------------
 
-    port: int = 5590
-    url: str = ""
+    port: int = DEFAULT_PORT
+    url: str = DEFAULT_URL
 
     # --------------------------------------------------------
     # Connection settings
     # --------------------------------------------------------
 
-    timeout: int = 30
-    retry_interval: int = 5
+    timeout: int = DEFAULT_TIMEOUT
+    retry_interval: int = DEFAULT_RETRY_INTERVAL
 
     # --------------------------------------------------------
     # Validation
