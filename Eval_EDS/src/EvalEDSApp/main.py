@@ -45,7 +45,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.lang import Builder
 
 # the screen procedures need to be imported even though they are not directly referenced 
-from ui import StatusScreen
+from EvalEDSApp.ui import StatusScreen,  InspectorScreen, ConfigurationScreen
 
 # from AskMeApp.ui.settings_screen import SettingsScreen
 # from AskMeApp.ui.context_screen import ContextScreen
@@ -76,80 +76,7 @@ class EvalEDSScreen(BoxLayout):
         if label is not None:
             label.text = message
 
-    # --------------------------------------------------------
-    # Inspector panel
-    # --------------------------------------------------------
-
-    def set_inspector_text(self, message: str):
-        """Display a text item in the Inspector panel."""
-
-        from kivy.metrics import dp
-        from kivy.uix.label import Label
-
-        inspector_screen = self.ids.screen_manager.get_screen("inspector")
-        content = inspector_screen.ids.get("inspector_content")
-
-        if content is None:
-            return
-
-        content.clear_widgets()
-
-        content.add_widget(
-            Label(
-                text=message,
-                size_hint_y=None,
-                height=dp(42),
-                halign="left",
-                valign="middle",
-                text_size=(content.width, None),
-                color=(0.25, 0.28, 0.32, 1),
-            )
-        )
-
-    # --------------------------------------------------------
-    # Configuration panel
-    # --------------------------------------------------------
-
-    def on_load_configuration(self):
-        """Load configuration - implementation to follow."""
-
-        self.set_status(
-            "Configuration loading is not connected yet."
-        )
-
-    def on_verify_configuration(self):
-        """Verify configuration - implementation to follow."""
-
-        self.set_status(
-            "Configuration verification is not connected yet."
-        )
-
-    def on_save_configuration(self):
-        """Save the current application configuration."""
-
-        app = App.get_running_app()
-
-        try:
-            app.save_configuration()
-
-        except Exception:
-            logger.exception(
-                "Unable to save application configuration"
-            )
-
-            self.set_status(
-                "Unable to save configuration. See application log.",
-                "ERROR"
-            )
-
-            return
-
-        self.set_status(
-            "Configuration saved successfully."
-        )
-
-
-
+  
 #===============================================================================
 # EvalEDS - kivy app
 #===============================================================================
@@ -200,16 +127,22 @@ class EvalEDSApp(App):
             self.initialize_configuration()
             self.initialize_secrets()
             
+            configuration_screen = (
+                self.root.ids.screen_manager.get_screen("configuration")
+            )
+            configuration_screen.load_from_config() 
+            
             self.root.set_status(
                 "application services initiaitlized."
             )
 
             self.root.set_application_status("Ready")
 
-            self.root.set_inspector_text(
+            inspector = self.root.ids.screen_manager.get_screen("inspector")
+            inspector.set_text(
                 "Select an item to inspect. "
                 "Historian browsing will be added in a later stage."
-            )
+         )
             
         except ConfigError:
 
@@ -289,14 +222,21 @@ class EvalEDSApp(App):
     # --------------------------------------------------------
     # Save configuration
     # --------------------------------------------------------
-
-    def save_configuration(self):
+    def save_configuration(self, config=None) -> None:
         """
-        Save current application configuration.
+        Save application configuration.
+    
+        The active configuration is updated only after
+        the configuration manager successfully saves it.
         """
-
-        self.config_manager.save(self.app_config)
-
+    
+        if config is None:
+            config = self.app_config
+    
+        self.config_manager.save(config)
+    
+        self.app_config = config
+        
     # --------------------------------------------------------
     # Update secret
     # --------------------------------------------------------

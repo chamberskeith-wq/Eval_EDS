@@ -1,0 +1,165 @@
+#:kivy 2.3.0
+#:import dp kivy.metrics.dp
+
+<ConfigurationScreen>:
+
+    BoxLayout:
+        orientation: "vertical"
+        padding: dp(8)
+        spacing: dp(5)
+
+        canvas.before:
+            Color:
+                rgba: 0.94, 0.95, 0.97, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        # Screen header
+        BoxLayout:
+            size_hint_y: None
+            height: dp(42)
+            padding: dp(10), 0
+
+            canvas.before:
+                Color:
+                    rgba: 0.18, 0.22, 0.28, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+            Label:
+                text: "Configuration"
+                bold: True
+                halign: "left"
+                valign: "middle"
+                text_size: self.size
+                color: 1, 1, 1, 1
+
+        Label:
+            text: "Application configuration"
+            size_hint_y: None
+            height: dp(34)
+            color: 0.25, 0.28, 0.32, 1
+            halign: "left"
+            valign: "middle"
+            text_size: self.size
+            padding: dp(8), 0
+
+        ScrollView:
+            do_scroll_x: False
+            bar_width: dp(8)
+
+            BoxLayout:
+                orientation: "vertical"
+                size_hint_y: None
+                height: self.minimum_height
+                spacing: dp(12)
+                padding: dp(8)
+
+                # Configuration file
+                GridLayout:
+                    cols: 2
+                    size_hint_y: None
+                    height: dp(42)
+                    spacing: dp(6)
+
+                    Label:
+                        text: "Configuration file"
+                        halign: "right"
+                        valign: "middle"
+                        text_size: self.size
+                        color: 0.20, 0.22, 0.25, 1
+
+                    TextInput:
+                        id: configuration_file
+                        readonly: True
+                        multiline: False
+                        size_hint_y: None
+                        height: dp(42)
+
+                # Application properties
+                Label:
+                    text: "Application settings"
+                    size_hint_y: None
+                    height: dp(30)
+                    bold: True
+                    halign: "left"
+                    valign: "middle"
+                    text_size: self.size
+                    color: 0.20, 0.22, 0.25, 1
+
+                GridLayout:
+                    cols: 2
+                    size_hint_y: None
+                    height: self.minimum_height
+                    row_default_height: dp(42)
+                    row_force_default: True
+                    spacing: dp(6)
+
+                    Label:
+                        text: "EDS URL"
+                        halign: "right"
+                        valign: "middle"
+                        text_size: self.size
+                        color: 0.20, 0.22, 0.25, 1
+
+                    TextInput:
+                        id: url
+                        multiline: False
+                        hint_text: "http://localhost"
+
+                    Label:
+                        text: "Port"
+                        halign: "right"
+                        valign: "middle"
+                        text_size: self.size
+                        color: 0.20, 0.22, 0.25, 1
+
+                    TextInput:
+                        id: port
+                        multiline: False
+                        input_filter: "int"
+
+                    Label:
+                        text: "Timeout (seconds)"
+                        halign: "right"
+                        valign: "middle"
+                        text_size: self.size
+                        color: 0.20, 0.22, 0.25, 1
+
+                    TextInput:
+                        id: timeout
+                        multiline: False
+                        input_filter: "int"
+
+                    Label:
+                        text: "Retry interval (seconds)"
+                        halign: "right"
+                        valign: "middle"
+                        text_size: self.size
+                        color: 0.20, 0.22, 0.25, 1
+
+                    TextInput:
+                        id: retry_interval
+                        multiline: False
+                        input_filter: "int"
+
+        # Configuration actions
+        BoxLayout:
+            size_hint_y: None
+            height: dp(46)
+            spacing: dp(6)
+            padding: dp(6)
+
+            Button:
+                text: "Load"
+                on_release: root.on_load_configuration()
+
+            Button:
+                text: "Verify"
+                on_release: root.on_verify_configuration()
+
+            Button:
+                text: "Save"
+                on_release: root.on_save_configuration()
