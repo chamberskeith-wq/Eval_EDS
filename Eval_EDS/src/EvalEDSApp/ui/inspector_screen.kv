@@ -1,7 +1,9 @@
+
 #:kivy 2.3.0
 #:import dp kivy.metrics.dp
 
 <InspectorScreen>:
+
     BoxLayout:
         orientation: "vertical"
         padding: dp(8)
@@ -35,34 +37,147 @@
                 text_size: self.size
                 color: 1, 1, 1, 1
 
-        Label:
-            text: "Browse and select an item to inspect"
+        # Configuration controls
+        BoxLayout:
             size_hint_y: None
-            height: dp(34)
-            color: 0.25, 0.28, 0.32, 1
-            halign: "left"
-            valign: "middle"
-            text_size: self.size
-            padding: dp(8), 0
+            height: dp(42)
+            spacing: dp(8)
 
-        ScrollView:
-            id: inspector_scroll
-            do_scroll_x: False
-            bar_width: dp(8)
+            Button:
+                text: "Refresh Configuration"
+                size_hint_x: None
+                width: dp(190)
+                disabled: root.refreshing
+                on_release: root.on_refresh_configuration()
 
-            GridLayout:
-                id: inspector_content
-                cols: 1
-                size_hint_y: None
-                height: self.minimum_height
-                spacing: dp(4)
+            Label:
+                text: root.retrieval_status
+                color: 0.25, 0.28, 0.32, 1
+                halign: "left"
+                valign: "middle"
+                text_size: self.size
+
+        # Retrieval timestamp
+        BoxLayout:
+            size_hint_y: None
+            height: dp(28)
+
+            Label:
+                text: "Last retrieved: " + root.retrieval_time
+                color: 0.35, 0.38, 0.42, 1
+                halign: "left"
+                valign: "middle"
+                text_size: self.size
+
+        # Main Inspector workspace
+        BoxLayout:
+            orientation: "horizontal"
+            spacing: dp(8)
+
+            # Left panel: configuration tree
+            BoxLayout:
+                orientation: "vertical"
+                size_hint_x: 0.38
+                spacing: dp(5)
                 padding: dp(8)
 
+                canvas.before:
+                    Color:
+                        rgba: 0.99, 0.99, 0.99, 1
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+
                 Label:
-                    text: "Inspector content will be populated by the application."
+                    id: component_count
+                    text: "EDS Configuration"
                     size_hint_y: None
-                    height: self.texture_size[1] + dp(16)
-                    text_size: self.width, None
+                    height: dp(32)
+                    bold: True
+                    color: 0.18, 0.22, 0.28, 1
                     halign: "left"
-                    valign: "top"
-                    color: 0.25, 0.28, 0.32, 1
+                    valign: "middle"
+                    text_size: self.size
+
+                ScrollView:
+                    do_scroll_x: False
+                    bar_width: dp(6)
+
+                    GridLayout:
+                        id: component_list
+                        cols: 1
+                        size_hint_y: None
+                        height: self.minimum_height
+                        spacing: dp(3)
+
+            # Right panel: selected configuration details
+            BoxLayout:
+                orientation: "vertical"
+                size_hint_x: 0.62
+                spacing: dp(5)
+                padding: dp(10)
+
+                canvas.before:
+                    Color:
+                        rgba: 0.99, 0.99, 0.99, 1
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+
+                Label:
+                    text: "Configuration Details"
+                    size_hint_y: None
+                    height: dp(32)
+                    bold: True
+                    color: 0.18, 0.22, 0.28, 1
+                    halign: "left"
+                    valign: "middle"
+                    text_size: self.size
+
+                Label:
+                    id: selected_component_title
+                    text: "No item selected"
+                    size_hint_y: None
+                    height: dp(32)
+                    bold: True
+                    font_size: "18sp"
+                    color: 0.18, 0.22, 0.28, 1
+                    halign: "left"
+                    valign: "middle"
+                    text_size: self.size
+
+                Label:
+                    id: selected_component_type
+                    text: ""
+                    size_hint_y: None
+                    height: dp(26)
+                    color: 0.35, 0.38, 0.42, 1
+                    halign: "left"
+                    valign: "middle"
+                    text_size: self.size
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+
+                    canvas:
+                        Color:
+                            rgba: 0.75, 0.77, 0.80, 1
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+
+                ScrollView:
+                    do_scroll_x: False
+                    bar_width: dp(6)
+
+                    Label:
+                        id: component_details
+                        text: "Select an item from the configuration tree."
+                        size_hint_y: None
+                        height: max(self.texture_size[1] + dp(20),self.parent.height)
+                        text_size: self.width, None
+                        halign: "left"
+                        valign: "top"
+                        color: 0.25, 0.28, 0.32, 1
+                        padding: dp(5)

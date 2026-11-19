@@ -165,12 +165,6 @@ class EvalEDSApp(App):
             
             # Start automatic EDS connection if enabled.
             self.start_auto_connect()
-
-            inspector = self.root.ids.screen_manager.get_screen("inspector")
-            inspector.set_text(
-                "Select an item to inspect. "
-                "Historian browsing will be added in a later stage."
-         )
             
         except ConfigError:
 
