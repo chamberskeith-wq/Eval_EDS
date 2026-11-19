@@ -7,9 +7,11 @@ Created on Nov 17, 2026
 from .status_screen import StatusScreen
 from .configuration_screen import ConfigurationScreen
 from .inspector_screen import InspectorScreen
+from .eds_connection_screen import EDSConnectionScreen
 
 __all__ = [
     "StatusScreen",
     "ConfigurationScreen",
-    "InspectorScreen"
+    "InspectorScreen",
+    "EDSConnectionScreen"
 ]

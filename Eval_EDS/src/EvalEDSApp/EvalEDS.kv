@@ -18,6 +18,9 @@
         InspectorScreen:
             name: "inspector"
 
+        EDSConnectionScreen:
+            name: "eds_connection"
+
         StatusScreen:
             name: "status"
 
@@ -35,6 +38,10 @@
         Button:
             text: "Inspector"
             on_release: screen_manager.current = "inspector"
+
+        Button:
+            text: "EDS Connection"
+            on_release: screen_manager.current = "eds_connection"
 
         Button:
             text: "Connections"

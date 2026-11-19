@@ -1,23 +1,66 @@
 """Configuration screen for EvalEDS."""
 
-import logging
 from pathlib import Path
 
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
+from kivy.properties import BooleanProperty, StringProperty
 
-from EvalEDSApp.config.app_constants import APP_NAMESPACE
 from common.configuration import ConfigError
-from EvalEDSApp.config import EvalEDSConfig
-from EvalEDSApp.config import APP_NAMESPACE
+from EvalEDSApp.config import EvalEDSConfig, APP_NAMESPACE
 
-
+import logging
 logger = logging.getLogger(APP_NAMESPACE)
 
 
 class ConfigurationScreen(Screen):
     """Presents application configuration controls and actions."""
+
+    has_changes = BooleanProperty(False)
+    change_status = StringProperty("All changes saved")
+
+    _saved_values = None
+
+    # --------------------------------------------------------
+    # Read displayed configuration values
+    # --------------------------------------------------------
+    def _read_form_values(self) -> tuple:
+        """Return the current values displayed in the form."""
+
+        return (
+            self.ids.auto_connect.active
+        )
+
+    # --------------------------------------------------------
+    # Update change state
+    # --------------------------------------------------------
+    def update_change_state(self, *args) -> None:
+        """Compare displayed values against the saved baseline."""
+
+        if self._saved_values is None:
+            return
+
+        current_values = self._read_form_values()
+
+        self.has_changes = current_values != self._saved_values
+
+        self.change_status = (
+            "Unsaved changes"
+            if self.has_changes
+            else "All changes saved"
+        )
+
+    # --------------------------------------------------------
+    # Establish saved baseline
+    # --------------------------------------------------------
+    def _set_saved_baseline(self) -> None:
+        """Record the current form values as the saved baseline."""
+
+        self._saved_values = self._read_form_values()
+
+        self.has_changes = False
+        self.change_status = "All changes saved"
 
     # --------------------------------------------------------
     # Load configuration into the screen
@@ -36,12 +79,11 @@ class ConfigurationScreen(Screen):
             app.config_manager.config_file
         )
 
-        self.ids.url.text = config.url
-        self.ids.port.text = str(config.port)
-        self.ids.timeout.text = str(config.timeout)
-        self.ids.retry_interval.text = str(config.retry_interval)
+        self.ids.auto_connect.active = config.auto_connect
 
-
+        # Establish the saved baseline.
+        self._set_saved_baseline()
+    
     # --------------------------------------------------------
     # Load configuration from file
     # --------------------------------------------------------
@@ -72,20 +114,9 @@ class ConfigurationScreen(Screen):
     def _build_configuration(self) -> EvalEDSConfig:
         """Build a configuration object from the displayed values."""
 
-        try:
-            return EvalEDSConfig(
-                url=self.ids.url.text.strip(),
-                port=int(self.ids.port.text.strip()),
-                timeout=int(self.ids.timeout.text.strip()),
-                retry_interval=int(
-                    self.ids.retry_interval.text.strip()
-                ),
-            )
-
-        except ValueError as exc:
-            raise ValueError(
-                "Port, timeout and retry interval must be integers."
-            ) from exc
+        return EvalEDSConfig(
+            auto_connect=bool(self.ids.auto_connect.active)  
+        )
 
     # --------------------------------------------------------
     # Verify configuration
@@ -114,6 +145,10 @@ class ConfigurationScreen(Screen):
     # --------------------------------------------------------
     def on_save_configuration(self) -> None:
         """Validate and persist the displayed configuration."""
+
+        if not self.has_changes:
+            self._report_status("No configuration changes to save.")
+            return
 
         app = App.get_running_app()
 

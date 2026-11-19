@@ -1,4 +1,3 @@
-
 #:kivy 2.3.0
 #:import dp kivy.metrics.dp
 
@@ -30,27 +29,114 @@
                     size: self.size
 
             Label:
-                text: "Connection"
+                text: "Status"
                 bold: True
                 halign: "left"
                 valign: "middle"
                 text_size: self.size
                 color: 1, 1, 1, 1
 
-        # Screen description
+        # Connection summary heading
         BoxLayout:
             size_hint_y: None
-            height: dp(34)
-            padding: dp(8), 0
+            height: dp(32)
+            padding: dp(5), 0
 
             Label:
-                text: "Application activity and messages"
+                text: "EDS Connection Summary"
+                bold: True
+                color: 0.18, 0.22, 0.28, 1
+                halign: "left"
+                valign: "middle"
+                text_size: self.size
+
+        # Connection summary
+        GridLayout:
+            cols: 2
+            size_hint_y: None
+            height: dp(116)
+            spacing: dp(5)
+            padding: dp(8)
+
+            canvas.before:
+                Color:
+                    rgba: 0.99, 0.99, 0.99, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+            Label:
+                text: "Connection state"
                 color: 0.25, 0.28, 0.32, 1
                 halign: "left"
                 valign: "middle"
                 text_size: self.size
 
-        # Status output
+            Label:
+                text: root.connection_state
+                color: root.connection_state_color
+                bold: True
+                halign: "left"
+                valign: "middle"
+                text_size: self.size
+
+            Label:
+                text: "Active endpoint"
+                color: 0.25, 0.28, 0.32, 1
+                halign: "left"
+                valign: "middle"
+                text_size: self.size
+
+            Label:
+                text: root.connection_endpoint
+                color: 0.18, 0.20, 0.23, 1
+                halign: "left"
+                valign: "middle"
+                text_size: self.size
+
+            Label:
+                text: "Last attempt"
+                color: 0.25, 0.28, 0.32, 1
+                halign: "left"
+                valign: "middle"
+                text_size: self.size
+
+            Label:
+                text: root.last_attempt
+                color: 0.18, 0.20, 0.23, 1
+                halign: "left"
+                valign: "middle"
+                text_size: self.size
+
+            Label:
+                text: "Last result"
+                color: 0.25, 0.28, 0.32, 1
+                halign: "left"
+                valign: "middle"
+                text_size: self.size
+
+            Label:
+                text: root.last_result
+                color: 0.18, 0.20, 0.23, 1
+                halign: "left"
+                valign: "middle"
+                text_size: self.size
+
+        # Activity log heading
+        BoxLayout:
+            size_hint_y: None
+            height: dp(32)
+            padding: dp(5), 0
+
+            Label:
+                text: "Application Activity"
+                bold: True
+                color: 0.18, 0.22, 0.28, 1
+                halign: "left"
+                valign: "middle"
+                text_size: self.size
+
+        # Activity log
         ScrollView:
             id: status_scroll
             do_scroll_x: False

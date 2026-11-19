@@ -98,52 +98,17 @@
                     spacing: dp(6)
 
                     Label:
-                        text: "EDS URL"
+                        text: "Auto Connect"
                         halign: "right"
                         valign: "middle"
                         text_size: self.size
                         color: 0.20, 0.22, 0.25, 1
 
-                    TextInput:
-                        id: url
-                        multiline: False
-                        hint_text: "http://localhost"
+                    Switch:
+                        id: auto_connect
+                        hint_text: "False"
+                        on_active: root.update_change_state()
 
-                    Label:
-                        text: "Port"
-                        halign: "right"
-                        valign: "middle"
-                        text_size: self.size
-                        color: 0.20, 0.22, 0.25, 1
-
-                    TextInput:
-                        id: port
-                        multiline: False
-                        input_filter: "int"
-
-                    Label:
-                        text: "Timeout (seconds)"
-                        halign: "right"
-                        valign: "middle"
-                        text_size: self.size
-                        color: 0.20, 0.22, 0.25, 1
-
-                    TextInput:
-                        id: timeout
-                        multiline: False
-                        input_filter: "int"
-
-                    Label:
-                        text: "Retry interval (seconds)"
-                        halign: "right"
-                        valign: "middle"
-                        text_size: self.size
-                        color: 0.20, 0.22, 0.25, 1
-
-                    TextInput:
-                        id: retry_interval
-                        multiline: False
-                        input_filter: "int"
 
         # Configuration actions
         BoxLayout:
@@ -151,6 +116,14 @@
             height: dp(46)
             spacing: dp(6)
             padding: dp(6)
+
+            Label:
+                text: root.change_status
+                size_hint_x: 1.5
+                color: (0.75, 0.35, 0.05, 1) if root.has_changes else (0.15, 0.5, 0.2, 1)
+                halign: "left"
+                valign: "middle"
+                text_size: self.size
 
             Button:
                 text: "Load"
