@@ -1,5 +1,5 @@
 
-"""Inspector screen for EvalEDS."""
+"""EDS Administration screen for EvalEDS."""
 
 import json
 import logging
@@ -21,7 +21,7 @@ from EvalEDSApp.config import APP_NAMESPACE
 logger = logging.getLogger(APP_NAMESPACE)
 
 
-class InspectorScreen(Screen):
+class EDSAdministrationScreen(Screen):
     """Retrieves and browses the EDS system configuration."""
 
     refreshing = BooleanProperty(False)
@@ -387,7 +387,7 @@ class InspectorScreen(Screen):
         )
 
         logger.info(
-            "Inspector selected configuration item: %s",
+            "EDS Administration selected configuration item: %s",
             ".".join(str(part) for part in path)
         )
 
@@ -476,7 +476,7 @@ class InspectorScreen(Screen):
         message: str,
         level: str = "INFO"
     ) -> None:
-        """Report activity through the application Status screen."""
+        """Report activity through the application Logging screen."""
 
         app = App.get_running_app()
 

@@ -1,0 +1,28 @@
+
+#:import dp kivy.metrics.dp
+
+<StreamInspectorScreen>:
+    BoxLayout:
+        orientation: "vertical"
+        padding: dp(20)
+        spacing: dp(10)
+
+        canvas.before:
+            Color:
+                rgba: 0.98, 0.98, 0.98, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        Label:
+            text: "Stream Inspector"
+            font_size: dp(24)
+            bold: True
+            color: 0.12, 0.16, 0.22, 1
+            size_hint_y: None
+            height: dp(40)
+
+        Label:
+            text: "Stream discovery and inspection will be implemented here."
+            font_size: dp(16)
+            color: 0.30, 0.34, 0.40, 1

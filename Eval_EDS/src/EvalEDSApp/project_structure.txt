@@ -1,0 +1,18 @@
+EvalEDSApp
+├── config
+│   ├── __init__.py
+│   ├── app_config.py
+│   └── app_constants.py
+├── ui
+│   ├── __init__.py
+│   ├── configuration_screen.kv
+│   ├── configuration_screen.py
+│   ├── inspector_screen.kv
+│   ├── inspector_screen.py
+│   ├── status_screen.kv
+│   └── status_screen.py
+├── __init__.py
+├── create_project_structure.py
+├── EvalEDS.kv
+├── EvalEDS.yml
+└── main.py

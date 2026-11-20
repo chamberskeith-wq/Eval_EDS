@@ -1,17 +1,17 @@
-'''
-Created on Nov 17, 2026
 
-@author: keith.chambers
-'''
-# EvalEDSApp/ui/__init__.py
-from .status_screen import StatusScreen
-from .configuration_screen import ConfigurationScreen
-from .inspector_screen import InspectorScreen
-from .eds_connection_screen import EDSConnectionScreen
+"""EvalEDS user-interface screens."""
+
+from .stream_inspector.stream_inspector_screen import StreamInspectorScreen
+from .stream_configuration.stream_configuration_screen import StreamConfigurationScreen
+from .eds_administration.eds_administration_screen import EDSAdministrationScreen
+from .logging.logging_screen import LoggingScreen
+from .settings.settings_screen import SettingsScreen
+
 
 __all__ = [
-    "StatusScreen",
-    "ConfigurationScreen",
-    "InspectorScreen",
-    "EDSConnectionScreen"
+    "StreamInspectorScreen",
+    "StreamConfigurationScreen"
+    "EDSAdministrationScreen",
+    "LoggingScreen",
+    "SettingsScreen",
 ]

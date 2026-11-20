@@ -1,0 +1,395 @@
+
+#:kivy 2.3.0
+#:import dp kivy.metrics.dp
+
+<SettingsScreen>:
+    BoxLayout:
+        orientation: "vertical"
+        padding: dp(8)
+        spacing: dp(5)
+
+        canvas.before:
+            Color:
+                rgba: 0.94, 0.95, 0.97, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        # Screen header
+        BoxLayout:
+            size_hint_y: None
+            height: dp(42)
+            padding: dp(10), 0
+
+            canvas.before:
+                Color:
+                    rgba: 0.18, 0.22, 0.28, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+            Label:
+                text: "Settings"
+                bold: True
+                halign: "left"
+                valign: "middle"
+                text_size: self.size
+                color: 1, 1, 1, 1
+
+        # Settings tabs
+        TabbedPanel:
+            id: settings_tabs
+            do_default_tab: False
+            tab_width: self.width / 2
+            tab_height: dp(38)
+            background_color: 0.94, 0.95, 0.97, 1
+            strip_image: ""
+            canvas.after:
+                Color: 
+                    rgba: 0.20, 0.38, 0.58, 1
+                Line:
+                    points: [self.x+5, self.top - self.tab_height, self.right-1, self.top - self.tab_height]
+                    width: dp(2)
+
+            # =================================================
+            # EDS PROFILE TAB
+            # =================================================
+
+            TabbedPanelItem:
+                text: "EDS Profile"
+                background_normal: ""
+                background_down: ""
+                background_color: (0.20, 0.38, 0.58, 1) if self.state == "down" else (0.82, 0.86, 0.91, 1)                
+        
+                BoxLayout:
+                    orientation: "vertical"
+                    spacing: dp(6)
+                    padding: dp(8)
+                    canvas.before:
+                        Color:
+                            rgba: 0.98, 0.98, 0.98, 1
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+
+                    ScrollView:
+                        do_scroll_x: False
+                        bar_width: dp(8)
+
+                        BoxLayout:
+                            orientation: "vertical"
+                            size_hint_y: None
+                            height: self.minimum_height
+                            spacing: dp(10)
+                            padding: dp(4)
+
+                            Label:
+                                text: "EDS connection profile"
+                                size_hint_y: None
+                                height: dp(30)
+                                bold: True
+                                color: 0.25, 0.28, 0.32, 1
+                                halign: "left"
+                                valign: "middle"
+                                text_size: self.size
+
+                            GridLayout:
+                                cols: 2
+                                size_hint_y: None
+                                height: dp(42)
+                                spacing: dp(6)
+
+                                Label:
+                                    text: "Configuration file"
+                                    halign: "right"
+                                    valign: "middle"
+                                    text_size: self.size
+                                    color: 0.20, 0.22, 0.25, 1
+
+                                TextInput:
+                                    id: connection_file
+                                    readonly: True
+                                    multiline: False
+                                    size_hint_y: None
+                                    height: dp(42)
+
+                            GridLayout:
+                                cols: 2
+                                size_hint_y: None
+                                height: self.minimum_height
+                                row_default_height: dp(42)
+                                row_force_default: True
+                                spacing: dp(6)
+
+                                Label:
+                                    text: "URL"
+                                    halign: "right"
+                                    valign: "middle"
+                                    text_size: self.size
+                                    color: 0.20, 0.22, 0.25, 1
+
+                                TextInput:
+                                    id: url
+                                    multiline: False
+                                    on_text: root.update_profile_change_state()
+
+                                Label:
+                                    text: "Port"
+                                    halign: "right"
+                                    valign: "middle"
+                                    text_size: self.size
+                                    color: 0.20, 0.22, 0.25, 1
+
+                                TextInput:
+                                    id: port
+                                    multiline: False
+                                    input_filter: "int"
+                                    on_text: root.update_profile_change_state()
+
+                                Label:
+                                    text: "Timeout (seconds)"
+                                    halign: "right"
+                                    valign: "middle"
+                                    text_size: self.size
+                                    color: 0.20, 0.22, 0.25, 1
+
+                                TextInput:
+                                    id: timeout
+                                    multiline: False
+                                    input_filter: "int"
+                                    on_text: root.update_profile_change_state()
+
+                                Label:
+                                    text: "Retry interval (seconds)"
+                                    halign: "right"
+                                    valign: "middle"
+                                    text_size: self.size
+                                    color: 0.20, 0.22, 0.25, 1
+
+                                TextInput:
+                                    id: retry_interval
+                                    multiline: False
+                                    input_filter: "int"
+                                    on_text: root.update_profile_change_state()
+
+                            Label:
+                                text: "Connection status"
+                                size_hint_y: None
+                                height: dp(28)
+                                bold: True
+                                color: 0.20, 0.22, 0.25, 1
+                                halign: "left"
+                                valign: "middle"
+                                text_size: self.size
+
+                            GridLayout:
+                                cols: 2
+                                size_hint_y: None
+                                height: dp(112)
+                                spacing: dp(5)
+                                padding: dp(6)
+
+                                Label:
+                                    text: "State"
+                                    color: 0.25, 0.28, 0.32, 1
+                                    halign: "left"
+                                    valign: "middle"
+                                    text_size: self.size
+
+                                Label:
+                                    text: root.connection_state
+                                    color: root.connection_state_color
+                                    bold: True
+                                    halign: "left"
+                                    valign: "middle"
+                                    text_size: self.size
+
+                                Label:
+                                    text: "Endpoint"
+                                    color: 0.25, 0.28, 0.32, 1
+                                    halign: "left"
+                                    valign: "middle"
+                                    text_size: self.size
+
+                                Label:
+                                    text: root.connection_endpoint
+                                    color: 0.18, 0.20, 0.23, 1
+                                    halign: "left"
+                                    valign: "middle"
+                                    text_size: self.size
+
+                                Label:
+                                    text: "Last attempt"
+                                    color: 0.25, 0.28, 0.32, 1
+                                    halign: "left"
+                                    valign: "middle"
+                                    text_size: self.size
+
+                                Label:
+                                    text: root.last_attempt
+                                    color: 0.18, 0.20, 0.23, 1
+                                    halign: "left"
+                                    valign: "middle"
+                                    text_size: self.size
+
+                                Label:
+                                    text: "Last result"
+                                    color: 0.25, 0.28, 0.32, 1
+                                    halign: "left"
+                                    valign: "middle"
+                                    text_size: self.size
+
+                                Label:
+                                    text: root.last_result
+                                    color: 0.18, 0.20, 0.23, 1
+                                    halign: "left"
+                                    valign: "middle"
+                                    text_size: self.size
+
+                    Label:
+                        text: root.profile_message
+                        size_hint_y: None
+                        height: dp(30) if root.profile_message else 0
+                        halign: "left"
+                        valign: "middle"
+                        text_size: self.size
+                        color: root.profile_message_color
+
+                    BoxLayout:
+                        size_hint_y: None
+                        height: dp(46)
+                        spacing: dp(6)
+
+                        Label:
+                            text: root.profile_change_status
+                            size_hint_x: 1.5
+                            color: (0.75, 0.35, 0.05, 1) if root.profile_has_changes else (0.15, 0.5, 0.2, 1)
+                            halign: "left"
+                            valign: "middle"
+                            text_size: self.size
+
+                        Button:
+                            text: "Load"
+                            on_release: root.on_load_profile()
+
+                        Button:
+                            text: "Verify"
+                            on_release: root.on_verify_profile()
+
+                        Button:
+                            text: "Test"
+                            on_release: root.on_test_connection()
+
+                        Button:
+                            text: "Save"
+                            disabled: not root.profile_has_changes
+                            on_release: root.on_save_profile()
+
+            # =================================================
+            # APPLICATION SETTINGS TAB
+            # =================================================
+
+            TabbedPanelItem:
+                text: "Application Settings"
+                background_normal: ""
+                background_down: ""
+                background_color: (0.20, 0.38, 0.58, 1) if self.state == "down" else (0.82, 0.86, 0.91, 1)
+                        
+                BoxLayout:
+                    orientation: "vertical"
+                    spacing: dp(6)
+                    padding: dp(8)
+                    canvas.before:
+                        Color:
+                            rgba: 0.98, 0.98, 0.98, 1
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                            
+                    ScrollView:
+                        do_scroll_x: False
+                        bar_width: dp(8)
+
+                        BoxLayout:
+                            orientation: "vertical"
+                            size_hint_y: None
+                            height: self.minimum_height
+                            spacing: dp(12)
+                            padding: dp(4)
+
+                            Label:
+                                text: "Application configuration"
+                                size_hint_y: None
+                                height: dp(30)
+                                bold: True
+                                color: 0.25, 0.28, 0.32, 1
+                                halign: "left"
+                                valign: "middle"
+                                text_size: self.size
+
+                            GridLayout:
+                                cols: 2
+                                size_hint_y: None
+                                height: dp(42)
+                                spacing: dp(6)
+
+                                Label:
+                                    text: "Configuration file"
+                                    halign: "right"
+                                    valign: "middle"
+                                    text_size: self.size
+                                    color: 0.20, 0.22, 0.25, 1
+
+                                TextInput:
+                                    id: configuration_file
+                                    readonly: True
+                                    multiline: False
+                                    size_hint_y: None
+                                    height: dp(42)
+
+                            GridLayout:
+                                cols: 2
+                                size_hint_y: None
+                                height: dp(42)
+                                row_default_height: dp(42)
+                                row_force_default: True
+                                spacing: dp(6)
+
+                                Label:
+                                    text: "Auto Connect"
+                                    halign: "right"
+                                    valign: "middle"
+                                    text_size: self.size
+                                    color: 0.20, 0.22, 0.25, 1
+
+                                Switch:
+                                    id: auto_connect
+                                    on_active: root.update_application_change_state()
+
+                    Widget:
+
+                    BoxLayout:
+                        size_hint_y: None
+                        height: dp(46)
+                        spacing: dp(6)
+
+                        Label:
+                            text: root.application_change_status
+                            size_hint_x: 1.5
+                            color: (0.75, 0.35, 0.05, 1) if root.application_has_changes else (0.15, 0.5, 0.2, 1)
+                            halign: "left"
+                            valign: "middle"
+                            text_size: self.size
+
+                        Button:
+                            text: "Load"
+                            on_release: root.on_load_configuration()
+
+                        Button:
+                            text: "Verify"
+                            on_release: root.on_verify_configuration()
+
+                        Button:
+                            text: "Save"
+                            disabled: not root.application_has_changes
+                            on_release: root.on_save_configuration()

@@ -7,20 +7,25 @@ Created on Aug 25, 2025
 # -----------------------------
 # imports
 # -----------------------------
-# Common services
-from common.configuration import ConfigManager, SecretManager, ConfigError, ConfigSecretError
 from datetime import datetime
+from pathlib import Path
+from threading import Thread
 
-# EvalEDS package imports
-from EvalEDSApp.eds import (
-    EDSConnectionProfile,
+# Common services
+from common.configuration import (
+    ConfigManager,
+    SecretManager,
+    ConfigError,
+    ConfigSecretError,
 )
-from EvalEDSApp.ui import (
-    StatusScreen,  
-    InspectorScreen, 
-    ConfigurationScreen,
-    EDSConnectionScreen,
+from common.logging import (
+    configure_base_logging, 
+    enforce_library_levels
 )
+
+
+# EvalEDS application services and configuration
+from common.eds import EDSConnectionProfile, EDSConnectionService
 from EvalEDSApp.config import (
     EvalEDSConfig,
     APP_NAME,
@@ -31,15 +36,20 @@ from EvalEDSApp.config import (
     EDS_USERNAME_NAME,
     EDS_PASSWORD_NAME,
     EDS_USERNAME_ENV,
-    EDS_PASSWORD_ENV
+    EDS_PASSWORD_ENV,
+)
+# while 
+from EvalEDSApp.ui import (
+    StreamInspectorScreen,
+    StreamConfigurationScreen,
+    EDSAdministrationScreen,
+    LoggingScreen,
+    SettingsScreen,
 )
 
-from pathlib import Path
-from threading import Thread
 # -----------------------------
 # Configure logging
 # -----------------------------
-from common.logging import configure_base_logging, enforce_library_levels
 configure_base_logging()
 
 import logging
@@ -49,15 +59,8 @@ logger = logging.getLogger(APP_NAMESPACE)
 # Kivy imports
 from kivy.app import App
 from kivy.utils import colormap 
-from kivy.uix.screenmanager import Screen
 from kivy.uix.boxlayout import BoxLayout
-from kivy.lang import Builder
 from kivy.clock import Clock
-
-# the screen procedures need to be imported even though they are not directly referenced 
-from EvalEDSApp.ui import StatusScreen,  InspectorScreen, ConfigurationScreen
-from EvalEDSApp.eds import EDSConnectionProfile, EDSConnectionService
-from EvalEDSApp.config import EvalEDSConfig
 
 # from AskMeApp.ui.settings_screen import SettingsScreen
 # from AskMeApp.ui.context_screen import ContextScreen
@@ -71,10 +74,10 @@ class EvalEDSScreen(BoxLayout):
     """
 
     def set_status(self, message, level="INFO"):
-        """Append a message to the Status screen."""
+        """Append a message to the Logging screen."""
     
-        status_screen = self.ids.screen_manager.get_screen("status")
-        status_screen.add_message(message, level)
+        logging_screen = self.ids.screen_manager.get_screen("logging")
+        logging_screen.add_message(message, level)
 
     # --------------------------------------------------------
     # Application status
@@ -136,22 +139,20 @@ class EvalEDSApp(App):
         logger.info("Starting %s", APP_NAME)
 
         try:
+            
+            # initialize services
             self.initialize_configuration()
             self.initialize_secrets()
             self.initialize_eds_connection_profile()
             self.initialize_eds_connection_service()
             
-            configuration_screen = (
-                self.root.ids.screen_manager.get_screen("configuration")
+            # initilize screens
+            settings_screen = (
+                self.root.ids.screen_manager.get_screen("settings")
             )
-            configuration_screen.load_from_config() 
+            settings_screen.load_from_config() 
             
-            connection_screen = (
-                self.root.ids.screen_manager.get_screen("eds_connection")
-            )
-            connection_screen.load_from_profile() 
-
-            # Initialize the Status screen connection summary.
+            # Initialize the Logging screen connection summary.
             self.update_connection_summary(
                 state="Not tested",
                 message="No connection attempt recorded."
@@ -203,19 +204,19 @@ class EvalEDSApp(App):
         last_attempt: str | None = None,
         endpoint: str | None = None
     ):
-        """Update the Status screen connection summary."""
+        """Update the EDS Profile tab connection summary."""
 
-        status_screen = self.root.ids.screen_manager.get_screen(
-            "status"
+        settings_screen = self.root.ids.screen_manager.get_screen(
+            "settings"
         )
 
-        status_screen.update_connection_status(
+        settings_screen.update_connection_status(
             state=state,
             endpoint=endpoint or self.get_eds_endpoint(),
             last_attempt=last_attempt or "Never",
             message=message
         )
-        
+                
     # --------------------------------------------------------
     # Start automatic EDS connection
     # --------------------------------------------------------

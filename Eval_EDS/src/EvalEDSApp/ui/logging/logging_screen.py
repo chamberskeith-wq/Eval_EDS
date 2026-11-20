@@ -1,5 +1,5 @@
 """
-Status screen for EvalEDS.
+Logging screen for EvalEDS.
 """
 
 from pathlib import Path
@@ -9,7 +9,7 @@ from kivy.properties import StringProperty, ListProperty
 from kivy.uix.screenmanager import Screen
 
 
-class StatusScreen(Screen):
+class LoggingScreen(Screen):
     """Displays EDS connection information and application activity."""
 
     # Connection summary
@@ -57,7 +57,7 @@ class StatusScreen(Screen):
     # --------------------------------------------------------
 
     def add_message(self, message: str, level: str = "INFO") -> None:
-        """Append a message to the status output."""
+        """Append a message to the application log."""
 
         output = self.ids.status_output
 
@@ -65,7 +65,7 @@ class StatusScreen(Screen):
         output.cursor = (0, len(output.text))
 
     def clear_messages(self) -> None:
-        """Clear the status output."""
+        """Clear the application log."""
 
         self.ids.status_output.text = ""
 

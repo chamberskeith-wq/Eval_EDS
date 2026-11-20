@@ -1,3 +1,4 @@
+
 #:kivy 2.3.0
 #:import dp kivy.metrics.dp
 
@@ -15,18 +16,21 @@
         id: screen_manager
         size_hint_y: 1
 
-        InspectorScreen:
-            name: "inspector"
+        StreamInspectorScreen:
+            name: "stream_inspector"
 
-        EDSConnectionScreen:
-            name: "eds_connection"
+        StreamConfigurationScreen:
+            name: "stream_configuration"
 
-        StatusScreen:
-            name: "status"
+        EDSAdministrationScreen:
+            name: "eds_administration"
 
-        ConfigurationScreen:
-            name: "configuration"
+        LoggingScreen:
+            name: "logging"
 
+        SettingsScreen:
+            name: "settings"
+            
     # Navigation bar
     BoxLayout:
         id: navigation_bar
@@ -36,20 +40,28 @@
         spacing: dp(5)
 
         Button:
-            text: "Inspector"
-            on_release: screen_manager.current = "inspector"
+            text: "Stream Inspector"
+            on_release: screen_manager.current = "stream_inspector"
 
         Button:
-            text: "EDS Connection"
-            on_release: screen_manager.current = "eds_connection"
+            text: "Stream Configuration"
+            on_release: screen_manager.current = "stream_configuration"
 
         Button:
-            text: "Connections"
-            on_release: screen_manager.current = "status"
+            text: "EDS Administration"
+            on_release: screen_manager.current = "eds_administration"
 
         Button:
-            text: "Settings"
-            on_release: screen_manager.current = "configuration"
+            text: "Logging"
+            on_release: screen_manager.current = "logging"
+
+        Button:
+            text: "⚙"
+            font_name: "DejaVuSans"
+            font_size: dp(22)
+            size_hint_x: None
+            width: dp(55)
+            on_release: screen_manager.current = "settings"
 
     # Application status strip
     BoxLayout:
